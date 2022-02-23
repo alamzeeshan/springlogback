@@ -1,12 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <logger name="guru.springframework.controllers" level="WARN" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
-    </logger>
-    <logger name="guru.springframework.helpers" level="WARN" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
-    </logger>
+    
+
+	<property name="APP_LOG_ROOT" value="/app/logs" />
+	<property name="LOG_PATTERN" value="%d{YYYY-MM-dd HH:mm:ss.SSS} %X : [%t] %-5level %logger{36}.%M:%L - %msg%n"/>
+	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    
+	<appender name="appLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${APP_LOG_ROOT}/casemgmnt/application.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${APP_LOG_ROOT}/casemgmnt/application-%d{YYYY-MM-dd}-%i.log</fileNamePattern>
+			
+			<maxIndex>1</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>19500KB</maxFileSize>
+		</triggeringPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+	
+	<root level="debug">
+    	<appender-ref ref="STDOUT" />
+    	<appender-ref ref="appLog" />
+  	</root>
  </configuration>
